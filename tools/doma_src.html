@@ -35,10 +35,10 @@ button{font-family:inherit;cursor:pointer;}
 .sheet>*{position:relative;z-index:1;}
 
 /* ---------- шапка ---------- */
-.bar{display:flex;align-items:center;gap:10px;padding:14px 16px 8px;}
+.bar{display:flex;align-items:center;gap:8px;padding:14px 16px 8px;}
 .bar .who{flex:1;min-width:0;}
 .bar .nm{font-weight:800;font-size:clamp(17px,4.4vw,22px);color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.bar .rd{font-weight:800;font-size:clamp(12px,3.2vw,15px);color:var(--gold-deep);letter-spacing:.04em;text-transform:uppercase;}
+.bar .rd{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:800;font-size:clamp(12px,3.2vw,15px);color:var(--gold-deep);letter-spacing:.04em;text-transform:uppercase;}
 .stars{display:flex;align-items:center;gap:6px;background:#fff;border:2.5px solid var(--gold);border-radius:999px;
   padding:4px 14px 4px 10px;font-weight:800;font-size:clamp(18px,4.8vw,24px);color:var(--gold-deep);transition:transform .25s;}
 .stars i{font-style:normal;color:var(--gold);font-size:1.15em;line-height:1;}
@@ -86,7 +86,7 @@ button{font-family:inherit;cursor:pointer;}
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px;}
 .mc .f{background:#fff;border:3px dashed var(--gold-soft);}
 .mc .f .n{width:56px;height:56px;border-radius:50%;background:var(--gold-soft);color:#fff;font-weight:800;font-size:30px;display:flex;align-items:center;justify-content:center;}
-.mc .f .q{font-family:var(--qf);font-size:46px;color:var(--gold-deep);line-height:1.2;}
+.mc .f .q{font-family:'Nunito',sans-serif;font-weight:800;font-size:44px;color:var(--gold-deep);line-height:1.2;}
 .mc .bk{transform:rotateY(180deg);background:var(--teal-tint);border:3px solid var(--teal);}
 .mc .bk .t{font-weight:800;font-size:clamp(19px,4.6vw,26px);color:var(--teal-deep);line-height:1.1;}
 .mc .bk .ex{white-space:nowrap;font-family:var(--qf);font-size:clamp(30px,4.6vw,46px);line-height:1.9;direction:rtl;background:#fff;border-radius:14px;padding:0 14px;}
@@ -162,13 +162,28 @@ button{font-family:inherit;cursor:pointer;}
 /* окно подтверждения */
 .dlg{position:fixed;inset:0;background:rgba(20,30,34,.55);display:none;align-items:center;justify-content:center;z-index:20;padding:20px;}
 .dlg.on{display:flex;}
-.dlg .bx{background:var(--paper);border:3px solid var(--gold);border-radius:22px;padding:22px;max-width:380px;text-align:center;}
+.dlg .bx{background:var(--paper);max-height:calc(100dvh - 40px);overflow:auto;border:3px solid var(--gold);border-radius:22px;padding:22px;max-width:380px;text-align:center;}
 .dlg p{font-weight:800;font-size:20px;margin:0 0 16px;color:var(--navy);}
 .dlg .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
-.dlg button{min-height:50px;border-radius:999px;padding:8px 22px;font-weight:800;font-size:18px;border:2.5px solid var(--teal);background:#fff;color:var(--teal-deep);}
-.dlg button.y{background:var(--teal);color:#fff;}
+.dlg .row button{min-height:50px;border-radius:999px;padding:8px 22px;font-weight:800;font-size:18px;border:2.5px solid var(--teal);background:#fff;color:var(--teal-deep);}
+.dlg .row button.y{background:var(--teal);color:#fff;}
 
 #fx{position:fixed;inset:0;pointer-events:none;z-index:30;}
+
+/* ---------- эмблема ребёнка ---------- */
+.emb{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:#fff;border:3px solid var(--gold);
+  font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;line-height:1;flex:0 0 auto;padding:0;}
+.bar .emb{width:48px;height:48px;font-size:28px;cursor:pointer;}
+.emb.big{width:clamp(96px,26vw,130px);height:clamp(96px,26vw,130px);font-size:clamp(56px,15vw,76px);cursor:pointer;transition:transform .2s;}
+.emb.big:active{transform:scale(.94);}
+.emb.empty{border-style:dashed;color:var(--gold-soft);font-family:'Nunito',sans-serif;font-weight:800;}
+.emb.pop{animation:pop .45s ease;}
+.egrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;width:min(100%,460px);}
+.eb{aspect-ratio:1;border-radius:16px;border:2.5px solid var(--g-bd);background:#fff;font-size:clamp(26px,7vw,34px);
+  font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;padding:0;line-height:1;transition:transform .12s;}
+.eb:active{transform:scale(.92);}
+.eb.on{border-color:var(--teal);background:var(--teal-tint);box-shadow:0 0 0 3px var(--teal-soft);}
+.dlg .bx.wide{max-width:480px;width:100%;}
 
 /* ---------- телефон: всё в столбик ---------- */
 @media (max-width:620px){
@@ -223,7 +238,7 @@ function buildSeq(){
   return q;
 }
 let G=null;
-function fresh(name){return {v:1,name:name||'',seq:buildSeq(),cur:0,res:{},stars:0,opened:{},sound:true,fix:null,fixCur:0,fixRes:{},round2:false};}
+function fresh(name){return {v:1,name:name||'',seq:buildSeq(),cur:0,res:{},stars:0,opened:{},sound:true,fix:null,fixCur:0,fixRes:{},round2:false,emb:''};}
 function load(){try{const s=JSON.parse(localStorage.getItem(HOME.key));if(s&&s.v===1&&s.seq) return s;}catch(e){}return null;}
 function save(){try{localStorage.setItem(HOME.key,JSON.stringify(G));}catch(e){}}
 G=load()||fresh('');
@@ -324,9 +339,23 @@ function loop(){cx.clearRect(0,0,fx.width,fx.height);
   P=P.filter(p=>p.life>0&&p.y<fx.height+40);
   raf=P.length?requestAnimationFrame(loop):(cx.clearRect(0,0,fx.width,fx.height),null);}
 
+/* ===================== ЭМБЛЕМЫ (те же, что в групповой игре) ===================== */
+const EMBS=[['🦅','Орёл'],['🐺','Волк'],['🐆','Барс'],['🦁','Лев'],['🐯','Тигр'],['🐻','Медведь'],['🐎','Скакун'],
+  ['🦊','Лиса'],['🦉','Сова'],['🐝','Пчела'],['🦈','Акула'],['🐬','Дельфин'],['⭐','Звезда'],['⚡','Молния'],['🔥','Огонёк'],
+  ['🚀','Ракета'],['⛰️','Горы'],['🌙','Полумесяц']];
+function embGrid(){return '<div class="egrid">'+EMBS.map(([e,t])=>'<button class="eb'+(G.emb===e?' on':'')+'" data-e="'+e+'" aria-label="'+t+'" title="'+t+'">'+e+'</button>').join('')+'</div>';}
+function bindGrid(root,after){root.querySelectorAll('.eb').forEach(b=>b.onclick=()=>{G.emb=b.dataset.e;save();sPop();
+  root.querySelectorAll('.eb').forEach(x=>x.classList.toggle('on',x===b));after();});}
+function pickEmb(after){const bx=$('dlg').querySelector('.bx');const keep=bx.innerHTML;
+  bx.classList.add('wide');bx.innerHTML='<p>Выбери эмблему</p>'+embGrid()+'<div class="row" style="margin-top:16px"><button class="y" id="pkok">Готово</button></div>';
+  $('dlg').classList.add('on');
+  const close=()=>{$('dlg').classList.remove('on');bx.classList.remove('wide');bx.innerHTML=keep;after();
+    const e=$('myemb')||$('bigemb');if(e){e.classList.add('pop');setTimeout(()=>e.classList.remove('pop'),450);}};
+  bindGrid(bx,()=>{}); $('pkok').onclick=close;}
+
 /* ===================== ОКНО ===================== */
 function ask(text,yes){$('dlgt').textContent=text;$('dlg').classList.add('on');
-  $('dlgy').onclick=()=>{$('dlg').classList.remove('on');yes();};$('dlgn').onclick=()=>$('dlg').classList.remove('on');}
+  $('dlg').querySelector('#dlgy').onclick=()=>{$('dlg').classList.remove('on');yes();};$('dlgn').onclick=()=>$('dlg').classList.remove('on');}
 
 /* ===================== ОТВЕТ ===================== */
 function answer(a){
@@ -367,7 +396,7 @@ function fixAgain(){ // повторяем то, что не вышло с пе�
   const miss=G.fix.filter(s=>!(G.fixRes[s.id]&&G.fixRes[s.id].first));
   G.fix=shuffle(miss); G.fixCur=0; G.fixRes={}; save(); render(true);
 }
-function restart(){const n=G.name,snd=G.sound;G=fresh(n);G.sound=snd;save();render(true);}
+function restart(){const n=G.name,snd=G.sound,e=G.emb;G=fresh(n);G.sound=snd;G.emb=e;save();render(true);}
 
 /* ===================== РЕНДЕР ===================== */
 function renderBar(s){
@@ -375,10 +404,11 @@ function renderBar(s){
   let rd=R?('Раунд '+(s.ri+1)+' из '+HOME.rounds.length):(G.fix?'Работа над ошибками':'');
   if(G.fix&&R) rd='Работа над ошибками';
   $('bar').innerHTML= s.t==='start'?'':
-    '<div class="who"><div class="nm">'+(G.name?nameTxt():HOME.title)+'</div><div class="rd">'+rd+'</div></div>'+
+    '<button class="emb" id="myemb" aria-label="Эмблема">'+(G.emb||'🙂')+'</button>'+'<div class="who"><div class="nm">'+(G.name?nameTxt():HOME.title)+'</div><div class="rd">'+rd+'</div></div>'+
     '<div class="stars"><i>★</i><span>'+G.stars+'</span></div>'+
     '<button class="ib'+(G.sound?'':' off')+'" id="snd" aria-label="Звук">♪</button>'+
     '<button class="ib" id="rst" aria-label="Начать заново">↺</button>';
+  if($('myemb')) $('myemb').onclick=()=>pickEmb(()=>renderBar(s));
   if($('snd')) $('snd').onclick=()=>{G.sound=!G.sound;save();renderBar(s);};
   if($('rst')) $('rst').onclick=()=>ask('Начать всё сначала? Звёзды обнулятся.',restart);
   // полоска прогресса
@@ -401,21 +431,23 @@ function render(enter){
     const back=G.started===false&&G.cur>0;
     h='<div class="salam">السَّلَامُ عَلَيْكُمْ</div><div class="title">'+HOME.title+'</div><div class="sub">'+HOME.sub+'</div>';
     if(G.name&&(G.cur>0||G.fix)){
-      h+='<div class="ask">С возвращением, '+nameTxt()+'!</div><div class="btns">'+
+      h+='<span class="emb big" id="bigemb">'+(G.emb||'🙂')+'</span><div class="ask">С возвращением, '+nameTxt()+'!</div><div class="btns">'+
         '<button class="next" id="cont">Продолжить</button><button class="next ghost" id="anew">Начать сначала</button>'+
         '<button class="next ghost" id="other">Это не я</button></div>';
       M.innerHTML=h; setFoot('');
+      $('bigemb').onclick=()=>pickEmb(()=>render());
       $('cont').onclick=()=>{A();G.started=true;render(true);};
       $('anew').onclick=()=>ask('Начать всё сначала? Звёзды обнулятся.',()=>{A();restart();G.started=true;render(true);});
       $('other').onclick=()=>ask('Начать с новым именем? Прогресс '+G.name+' сотрётся.',()=>{G=fresh('');save();render();});
       return;
     }
     h+='<div class="ask">Как тебя зовут?</div><input class="name" id="nm" maxlength="24" autocomplete="off" placeholder="Твоё имя" value="'+esc(G.name)+'">'+
-       '<div class="hint">Имя останется только на этом устройстве</div>';
-    M.innerHTML=h;
+       '<div class="ask">Выбери свою эмблему</div>'+embGrid()+
+       '<div class="hint">Имя и эмблема останутся только на этом устройстве</div>';
+    M.innerHTML=h; bindGrid(M,()=>{});
     setFoot('<button class="next" data-go>Начинаем ›</button>',()=>{
       const v=$('nm').value.trim(); if(!v){$('nm').focus();$('nm').style.borderColor='var(--red)';return;}
-      A(); G.name=v; G.started=true; save(); render(true);});
+      A(); G.name=v; if(!G.emb) G.emb=EMBS[Math.floor(Math.random()*EMBS.length)][0]; G.started=true; save(); render(true);});
     $('nm').onkeydown=e=>{if(e.key==='Enter')$('foot').querySelector('[data-go]').click();};
     return;
   }
@@ -433,7 +465,7 @@ function render(enter){
     h='<div class="qcap">Открыто <b>'+opened+'</b> из '+n+'</div><div class="cards">'+ORDER.map((k,j)=>{const R=info(k);
       const ru=R.cz.includes('class="ru"');
       return '<div class="mc'+(G.opened[k]?' open':'')+'" data-k="'+k+'"><div class="in">'+
-        '<div class="f"><div class="n">'+(j+1)+'</div><div class="q">؟</div></div>'+
+        '<div class="f"><div class="n">'+(j+1)+'</div><div class="q">?</div></div>'+
         '<div class="bk"><div class="t">'+R.nm+'</div><div class="ex">'+MAP[k].w+'</div>'+
         '<div class="lt'+(ru?' ru':'')+'">'+R.cz.replace(/<[^>]+>/g,'')+'</div><div class="du">'+R.gn+'</div></div></div></div>';}).join('')+'</div>';
     M.innerHTML=h;
@@ -491,7 +523,7 @@ function render(enter){
     ids.forEach(q=>{if(q.t==='tw')return; const k=ansOf(q); if(!per[k])return; per[k].b++; if(G.res[q.id]&&G.res[q.id].first) per[k].a++;});
     const ratio=G.stars/max;
     const head=ratio>=.9?'Машаллах, '+nameTxt()+'!':ratio>=.7?'Молодец, '+nameTxt()+'!':'Хорошая работа, '+nameTxt()+'!';
-    h='<div class="big">'+head+'</div><div class="score"><i>★</i>'+G.stars+'<small>из '+max+'</small></div>'+
+    h='<span class="emb big">'+(G.emb||'🙂')+'</span><div class="big">'+head+'</div><div class="score"><i>★</i>'+G.stars+'<small>из '+max+'</small></div>'+
       '<div class="rmap">'+ORDER.map(k=>{const p=per[k];const cl=p.b&&p.a===p.b?' full':(p.b&&p.a/p.b<.6?' weak':'');
         return '<div class="rm'+cl+'"><div class="t">'+info(k).nm+'</div><div class="v">'+p.a+' / '+p.b+'</div></div>';}).join('')+'</div>'+
       (miss?'<div class="ask">Ошибок: '+miss+'. Давай их исправим!</div>':'<div class="ask">Все ответы — с первого раза!</div>')+
@@ -514,7 +546,7 @@ function render(enter){
       $('fx2').onclick=fixAgain;
       $('end').onclick=()=>{G.fix=null;save();render();};
     } else {
-      h='<div class="big">Все ошибки исправлены, '+nameTxt()+'!</div><div class="score"><i>★</i>'+G.stars+'</div>'+
+      h='<span class="emb big">'+(G.emb||'🙂')+'</span><div class="big">Все ошибки исправлены, '+nameTxt()+'!</div><div class="score"><i>★</i>'+G.stars+'</div>'+
         '<div class="salam-end">السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ</div>';
       M.innerHTML=h; if(enter){sAll();confetti(120);}
       $('foot').innerHTML='<div class="btns"><button class="next" id="again">↺ Пройти ещё раз</button></div>';
