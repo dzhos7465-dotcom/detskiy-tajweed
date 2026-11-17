@@ -1,18 +1,71 @@
 <!DOCTYPE html>
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Детский таджвид — тренажёры</title>
+<meta name="robots" content="noindex,nofollow">
+<title>Детский таджвид</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&display=swap" rel="stylesheet">
-<style>
-body{margin:0;min-height:100vh;background:#22343A;font-family:'Nunito',sans-serif;display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box}
-.box{background:#FCFBF7;border:3px solid #C6A24A;border-radius:28px;padding:36px 32px;max-width:520px;width:100%;text-align:center}
-h1{color:#2C3A78;font-size:34px;margin:0 0 6px}p{color:#A9822B;font-weight:800;margin:0 0 26px}
-a{display:block;margin:14px 0;padding:18px;border-radius:999px;background:#1E8A80;color:#fff;font-weight:800;font-size:24px;text-decoration:none}
-a:hover{background:#14726C}
-</style></head><body><div class="box">
-<h1>Детский таджвид</h1><p>Тренажёры для повторения</p>
-<a href="nun/">Охота за нунами</a>
-<a href="mim/">Охота за мимами</a>
-<p style="margin:26px 0 8px">Дома — для одного ребёнка</p>
-<a href="mim/doma/">Мимы дома</a>
-<a href="madd/">Охота за маддами</a>
-</div></body></html>
+<link rel="stylesheet" href="assets/site.css">
+</head><body><div class="page">
+  <div class="top"><span class="brand">Детский таджвид</span><a class="small-link" id="notme" href="#" hidden>Это не я</a></div>
+
+  <div class="salam">
+    <div class="s-ar ar">السَّلَامُ عَلَيْكُمْ</div>
+    <div class="s-ru" id="hello">Ассаляму алейкум!</div>
+  </div>
+
+  <div class="namebox" id="namebox" hidden>
+    <p>Как тебя зовут?</p>
+    <div class="row"><input id="nameIn" maxlength="20" autocomplete="off" placeholder="Амина"><button class="btn" id="nameOk">Готово</button></div>
+    <div class="err" id="nameErr"></div>
+    <div class="note">Имя остаётся только на этом телефоне</div>
+  </div>
+
+  <div class="doors">
+    <a class="door teal" href="nulevoy/">
+      <div class="ic">📖</div>
+      <h2>Нулевой курс</h2>
+      <div class="sub">Учимся читать</div>
+      <div class="bar"><i id="bar0" style="width:0"></i></div>
+      <div class="sub" id="cnt0" style="margin-top:6px"></div>
+      <div class="go" id="go0">Начать →</div>
+    </a>
+    <a class="door violet" href="perviy/">
+      <div class="ic">✨</div>
+      <h2>Первый курс</h2>
+      <div class="sub">Правила таджвида</div>
+      <div class="bar"><i id="bar1" style="width:0"></i></div>
+      <div class="sub" id="cnt1" style="margin-top:6px"></div>
+      <div class="go">Открыть →</div>
+    </a>
+  </div>
+
+  <a class="trainers" href="mim/doma/">🎮 Тренажёры <span class="list">Мимы дома</span></a>
+
+  <div class="foot"><a href="uchitel/">Для учителя</a></div>
+</div>
+<script src="assets/lessons.js"></script>
+<script src="assets/site.js"></script>
+<script>
+  function paint(){
+    var n=DT.getName();
+    document.getElementById('hello').textContent=n?('Ассаляму алейкум, '+n+'!'):'Ассаляму алейкум!';
+    document.getElementById('namebox').hidden=!!n;
+    document.getElementById('notme').hidden=!n;
+    [['nulevoy',0],['perviy',1]].forEach(function(c){
+      var s=DT.stats(c[0]);
+      document.getElementById('bar'+c[1]).style.width=(s.total?Math.round(100*s.done/s.total):0)+'%';
+      document.getElementById('cnt'+c[1]).textContent=s.total?('пройдено '+s.done+' из '+s.total):'уроки скоро появятся';
+    });
+    var cur=DT.current('nulevoy'), go=document.getElementById('go0');
+    if(cur){go.textContent=(DT.stats('nulevoy').done?'Продолжить: урок ':'Начать: урок ')+cur.n+' →';}
+    else{go.textContent='Все открытые уроки пройдены ✓';}
+  }
+  var inp=document.getElementById('nameIn'),err=document.getElementById('nameErr');
+  function save(){var v=inp.value.trim();if(!v){err.textContent='Напиши своё имя';return;}DT.setName(v);paint();}
+  document.getElementById('nameOk').onclick=save;
+  inp.onkeydown=function(e){if(e.key==='Enter')save();};
+  inp.oninput=function(){err.textContent='';};
+  document.getElementById('notme').onclick=function(e){e.preventDefault();
+    if(confirm('Начать заново? Имя и отметки на этом телефоне сотрутся.')){DT.clearAll();inp.value='';paint();}};
+  paint();
+</script>
+</body></html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Урок · Нулевой курс</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/site.css">
+</head><body><div class="page">
+  <a class="back" href="../">← Нулевой курс</a>
+  <h1 id="ttl">Урок</h1>
+  <p class="lead" id="sub"></p>
+  <div class="lesson-grid">
+    <div class="video" id="video"><div id="yt"></div></div>
+    <div>
+      <div class="steps" id="steps"></div>
+      <div class="finish" id="finish">Машаа Аллах! Урок пройден 🌟</div>
+    </div>
+  </div>
+  <div class="nextles"><span id="prevL"></span><span id="nextL"></span></div>
+</div>
+<script src="../../assets/lessons.js"></script>
+<script src="../../assets/site.js"></script>
+<script>
+  var C='nulevoy', SLUG=location.pathname.split('/').filter(Boolean).slice(-1)[0];
+  var ls=COURSES[C].lessons, L=ls.find(function(x){return x.slug===SLUG;})||ls[0], ID=DT.lessonId(C,L);
+  document.title='Урок '+L.n+' · Нулевой курс';
+  document.getElementById('ttl').innerHTML='Урок '+L.n+(L.ar?' · <span class="ar">'+L.ar+'</span>':'');
+  document.getElementById('sub').textContent=L.ru.charAt(0).toUpperCase()+L.ru.slice(1);
+
+  var META={
+    video:{t:'Смотрим видео',s:'учитель объясняет урок',ic:'▶'},
+    prez:{t:'Презентация',s:'листаем слайды',href:'prezentaciya.html'},
+    doma:{t:'Читаем дома',s:'читаем вслух по рядам',href:'chitaem-doma.png'},
+    trainer:{t:'Тренажёр',s:'играем и повторяем',href:L.trainer}
+  };
+  var steps=DT.stepsOf(L), box=document.getElementById('steps');
+  function paint(){
+    var p=DT.prog()[ID]||{}, first=null; box.innerHTML='';
+    steps.forEach(function(k,i){
+      var done=!!p[k]; if(!done&&first===null)first=k;
+      var m=META[k], el=document.createElement(m.href?'a':'button');
+      el.className='step'+(done?' done':'')+(first===k?' cur':'');
+      if(m.href){el.href=m.href;}
+      el.innerHTML='<span class="ck">'+(done?'✓':'')+'</span><span>'+(i+1)+' · '+m.t+'<span class="sub">'+m.s+'</span></span>';
+      el.onclick=function(){
+        if(k==='video'){ if(p[k])DT.unmarkStep(ID,k); else DT.markStep(ID,k); paint();
+          document.getElementById('video').scrollIntoView({behavior:'smooth',block:'center'}); return; }
+        DT.markStep(ID,k);
+      };
+      box.appendChild(el);
+    });
+    document.getElementById('finish').classList.toggle('show',DT.isDone(C,L));
+  }
+  paint();
+  addEventListener('pageshow',paint);
+
+  var i=ls.indexOf(L), pv=ls[i-1], nx=ls[i+1];
+  if(pv&&pv.slug)document.getElementById('prevL').innerHTML='<a href="../'+pv.slug+'/">← Урок '+pv.n+'</a>';
+  if(nx)document.getElementById('nextL').innerHTML=nx.slug?'<a href="../'+nx.slug+'/">Урок '+nx.n+' →</a>':'Урок '+nx.n+' 🔒';
+
+  /* видео YouTube: отмечаем шаг, когда видео запустили */
+  if(L.video){
+    var t=document.createElement('script');t.src='https://www.youtube.com/iframe_api';document.head.appendChild(t);
+    window.onYouTubeIframeAPIReady=function(){
+      new YT.Player('yt',{videoId:L.video,host:'https://www.youtube-nocookie.com',
+        playerVars:{rel:0,modestbranding:1,playsinline:1},
+        events:{onStateChange:function(e){if(e.data===1){DT.markStep(ID,'video');paint();}}}});
+    };
+  } else { document.getElementById('video').hidden=true; }
+</script>
+</body></html>
