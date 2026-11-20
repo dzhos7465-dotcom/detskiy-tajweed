@@ -186,6 +186,14 @@ button{font-family:inherit;cursor:pointer;}
 .dlg .bx.wide{max-width:480px;width:100%;}
 
 /* ---------- телефон: всё в столбик ---------- */
+@media (max-width:420px){ /* узкий телефон: «Раунд 4 из 6» не обрезается при двузначных звёздах */
+  .bar{gap:6px;padding:12px 10px 8px;}
+  .bar .emb{width:42px;height:42px;font-size:24px;border-width:2.5px;}
+  .stars{padding:3px 10px 3px 8px;gap:4px;font-size:18px;}
+  .ib{width:38px;height:38px;font-size:18px;}
+  .bar .rd{letter-spacing:.02em;font-size:12px;}
+}
+@media (max-width:370px){.bar .rd{letter-spacing:0;font-size:11px;}}
 @media (max-width:620px){
   .opts{grid-template-columns:1fr;}
   .opts.many{grid-template-columns:1fr 1fr;}
@@ -493,8 +501,8 @@ function restart(){const n=G.name,snd=G.sound,e=G.emb;G=fresh(n);G.sound=snd;G.e
 /* ===================== РЕНДЕР ===================== */
 function renderBar(s){
   const R=s.ri!=null?HOME.rounds[s.ri]:null;
-  let rd=R?('Раунд '+(s.ri+1)+' из '+HOME.rounds.length):(G.fix?'Работа над ошибками':'');
-  if(G.fix&&R) rd='Работа над ошибками';
+  let rd=R?('Раунд '+(s.ri+1)+' из '+HOME.rounds.length):(G.fix?'Над ошибками':'');
+  if(G.fix&&R) rd='Над ошибками';
   $('bar').innerHTML= s.t==='start'?'':
     '<button class="emb" id="myemb" aria-label="Эмблема">'+(G.emb||'🙂')+'</button>'+'<div class="who"><div class="nm">'+(G.name?nameTxt():HOME.title)+'</div><div class="rd">'+rd+'</div></div>'+
     '<div class="stars"><i>★</i><span>'+G.stars+'</span></div>'+

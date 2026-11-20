@@ -186,8 +186,17 @@ button{font-family:inherit;cursor:pointer;}
 .dlg .bx.wide{max-width:480px;width:100%;}
 
 /* ---------- телефон: всё в столбик ---------- */
+@media (max-width:420px){ /* узкий телефон: «Раунд 4 из 6» не обрезается при двузначных звёздах */
+  .bar{gap:6px;padding:12px 10px 8px;}
+  .bar .emb{width:42px;height:42px;font-size:24px;border-width:2.5px;}
+  .stars{padding:3px 10px 3px 8px;gap:4px;font-size:18px;}
+  .ib{width:38px;height:38px;font-size:18px;}
+  .bar .rd{letter-spacing:.02em;font-size:12px;}
+}
+@media (max-width:370px){.bar .rd{letter-spacing:0;font-size:11px;}}
 @media (max-width:620px){
   .opts{grid-template-columns:1fr;}
+  .opts.many{grid-template-columns:1fr 1fr;}
   .cards,.rmap{grid-template-columns:1fr;}
   .rmap .rm{display:flex;justify-content:space-between;align-items:center;padding:8px 16px;}
   .twins{flex-direction:column;gap:6px;}
@@ -290,10 +299,12 @@ function qCount(ri){return G.seq.filter(s=>s.ri===ri&&s.id).length;}
 /* ===================== ВСПОМОГАТЕЛЬНОЕ ===================== */
 function W(x){return '<span class="wd"><span>'+x.w+'</span>'+(x.s?'<span class="aend">۝</span>':'')+'</span>';}
 function itemOf(s){ if(s.t==='ay') return AYAT[s.ai].t[s.ti]; return HOME.rounds[s.ri].items[s.i]; }
-function ansOf(s){ const it=itemOf(s); return s.t==='tw'?it.a:it.k; }
+function ansOf(s){ const it=itemOf(s); if(s.t==='tw') return it.a;
+  const R=HOME.rounds[s.ri]; if(R&&R.opts==='du') return RULES[it.k].du; return it.k; }
 function optsOf(s){
   const R=HOME.rounds[s.ri];
   if(R.opts==='act') return ORDER.map(k=>({k,t:RULES[k].act}));
+  if(R.opts==='du') return DUR.map(d=>({k:d.k,t:d.t}));
   return ORDER.map(k=>({k,t:RULES[k].nm}));
 }
 function nameTxt(){return G.name?esc(G.name):'';}
@@ -440,8 +451,8 @@ function restart(){const n=G.name,snd=G.sound,e=G.emb;G=fresh(n);G.sound=snd;G.e
 /* ===================== РЕНДЕР ===================== */
 function renderBar(s){
   const R=s.ri!=null?HOME.rounds[s.ri]:null;
-  let rd=R?('Раунд '+(s.ri+1)+' из '+HOME.rounds.length):(G.fix?'Работа над ошибками':'');
-  if(G.fix&&R) rd='Работа над ошибками';
+  let rd=R?('Раунд '+(s.ri+1)+' из '+HOME.rounds.length):(G.fix?'Над ошибками':'');
+  if(G.fix&&R) rd='Над ошибками';
   $('bar').innerHTML= s.t==='start'?'':
     '<button class="emb" id="myemb" aria-label="Эмблема">'+(G.emb||'🙂')+'</button>'+'<div class="who"><div class="nm">'+(G.name?nameTxt():HOME.title)+'</div><div class="rd">'+rd+'</div></div>'+
     '<div class="stars"><i>★</i><span>'+G.stars+'</span></div>'+
@@ -529,7 +540,7 @@ function render(enter){
     }
     if(R.ask) h='<div class="qcap">'+R.ask+'</div>'+h;
     const opts=optsOf(s);
-    h+='<div class="msg">'+msgHTML(s,x)+'</div><div class="opts">'+opts.map(o=>{let c='opt';
+    h+='<div class="msg">'+msgHTML(s,x)+'</div><div class="opts'+(opts.length>4?' many':'')+'">'+opts.map(o=>{let c='opt';
       if(x.tries.includes(o.k)&&o.k!==right) c+=' wrong'; if(x.done){c+=' off'; if(o.k===right) c+=' right';}
       return '<button class="'+c+'" data-a="'+o.k+'">'+o.t+'</button>';}).join('')+'</div>'+
       '<div class="reveal">'+(x.done?revealHTML(it):'')+'</div>';
@@ -559,7 +570,7 @@ function render(enter){
     const miss=ids.filter(q=>!(G.res[q.id]&&G.res[q.id].first)).length;
     // по правилам: только вопросы, где ответ — правило (не «Близнецы»)
     const per={}; ORDER.forEach(k=>per[k]={a:0,b:0});
-    ids.forEach(q=>{if(q.t==='tw')return; const k=ansOf(q); if(!per[k])return; per[k].b++; if(G.res[q.id]&&G.res[q.id].first) per[k].a++;});
+    ids.forEach(q=>{if(q.t==='tw')return; const k=itemOf(q).k; if(!per[k])return; per[k].b++; if(G.res[q.id]&&G.res[q.id].first) per[k].a++;});
     const ratio=G.stars/max;
     const head=ratio>=.9?'Машаллах, '+nameTxt()+'!':ratio>=.7?'Молодец, '+nameTxt()+'!':'Хорошая работа, '+nameTxt()+'!';
     h='<span class="emb big">'+(G.emb||'🙂')+'</span><div class="big">'+head+'</div><div class="score"><i>★</i>'+G.stars+'<small>из '+max+'</small></div>'+

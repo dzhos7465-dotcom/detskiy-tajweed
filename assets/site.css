@@ -56,7 +56,8 @@ h1 .ar{font-size:1.25em;font-weight:400}
 .go{margin-top:10px;font-weight:800;font-size:15px}
 .door.teal .go{color:var(--teal-deep)} .door.violet .go{color:var(--violet)}
 .trainers{display:flex;align-items:center;gap:12px;background:#FAEEDA;border-radius:18px;padding:14px 18px;margin-top:14px;font-weight:800;color:#633806}
-.trainers .list{margin-left:auto;font-size:14px;color:#854F0B;text-align:right}
+.trainers .list{margin-left:auto;font-size:14px;color:#854F0B;text-align:right;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}
+.trainers .list a{color:inherit;text-decoration:none;background:#fff;border:1.5px solid #E8C78F;border-radius:999px;padding:7px 14px}
 .foot{text-align:center;margin-top:22px;font-size:13px;font-weight:700;color:var(--muted)}
 .foot a{text-decoration:underline}
 
