@@ -267,6 +267,12 @@ button{font-family:inherit;}
 .stage .ask{margin-top:10px;}
 .opts.sp .opt{font-size:30px;padding:0 10px;min-height:120px;}
 .opts.sp .opt .ar{font-size:64px;line-height:1.7;}
+.opt{position:relative;}
+.opt .num{position:absolute;top:-16px;left:-12px;width:42px;height:42px;border-radius:50%;background:var(--gold);color:#fff;
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:26px;line-height:42px;text-align:center;box-shadow:0 3px 8px rgba(169,130,43,.35);}
+.opt.right .num{background:#fff;color:var(--teal-deep);}
+.opt.wrong .num{background:var(--g-bd);box-shadow:none;}
+.opts{margin-top:34px;}
 </style>
 </head>
 <body>
@@ -496,9 +502,9 @@ function revealHTML(s,x){
 }
 function optsHTML(s,x){
   const L=optList(s);
-  return '<div class="opts n'+L.length+(kindOf(s)==='split'?' sp':'')+'">'+L.map(([v,t])=>{
+  return '<div class="opts n'+L.length+(kindOf(s)==='split'?' sp':'')+'">'+L.map(([v,t],j)=>{
     let c='opt'; if(x.tried.includes(v)) c+=' wrong'; if(x.done){c+=' off'; if(v===s.ans) c+=' right';}
-    return '<button class="'+c+'" data-a="'+v+'">'+t+'</button>';}).join('')+'</div>';
+    return '<button class="'+c+'" data-a="'+v+'"><span class="num">'+(j+1)+'</span>'+t+'</button>';}).join('')+'</div>';
 }
 
 /* ===================== РЕНДЕР ЭКРАНОВ ===================== */
@@ -599,6 +605,7 @@ $('snd').onclick=()=>{G.sound=!G.sound;save();renderNav();};
 $('again').onclick=askRestart;$('dYes').onclick=restart;$('dNo').onclick=()=>$('dlg').classList.remove('on');
 $('dlg').onclick=e=>{if(e.target.id==='dlg')$('dlg').classList.remove('on');};
 addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;
+  if(/^[1-9]$/.test(e.key)){const b=document.querySelectorAll('.opts .opt')[+e.key-1];if(b&&!b.classList.contains('off')&&!b.classList.contains('wrong'))b.click();return;}
   if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(1);} if(e.key==='ArrowLeft')go(-1);});
 
 /* ===================== МАСШТАБ ===================== */
