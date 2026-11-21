@@ -20,7 +20,8 @@
   <h1 id="ttl">Урок</h1>
   <p class="lead" id="sub"></p>
   <div class="divider"><i></i><em></em><i></i></div>
-  <div class="lesson-grid">
+  <div class="notice glass tint-gold" id="closed" hidden>Этот урок ещё закрыт.<br>Учитель откроет его, когда вы пройдёте его на занятии.<br><br><a class="btn" style="display:inline-block" href="../">К списку уроков</a></div>
+  <div class="lesson-grid" id="lgrid">
     <div class="video" id="video"><div id="yt"></div></div>
     <div>
       <div class="steps" id="steps"></div>
@@ -38,45 +39,49 @@
   document.getElementById('ttl').innerHTML='<span class="gt">Урок '+L.n+'</span>'+(L.ar?' · <span class="ar gt">'+L.ar.replace(/ي/g,'<span class="ya">ي</span>')+'</span>':'');
   document.getElementById('sub').textContent=L.ru.charAt(0).toUpperCase()+L.ru.slice(1);
 
+  DT.load(function(){
+    if(!DT.isOpen(C,L)){document.getElementById('closed').hidden=false;document.getElementById('lgrid').hidden=true;
+      document.querySelector('.nextles').hidden=true;return;}
   var META={
-    video:{t:'Смотрим видео',s:'учитель объясняет урок',ic:'▶'},
-    prez:{t:'Презентация',s:'листаем слайды',href:'prezentaciya.html'},
-    doma:{t:'Читаем дома',s:'читаем вслух по рядам',href:'chitaem-doma.png'},
-    trainer:{t:'Тренажёр',s:'играем и повторяем',href:L.trainer}
-  };
-  var steps=DT.stepsOf(L), box=document.getElementById('steps');
-  function paint(){
-    var p=DT.prog()[ID]||{}, first=null; box.innerHTML='';
-    steps.forEach(function(k,i){
-      var done=!!p[k]; if(!done&&first===null)first=k;
-      var m=META[k], el=document.createElement(m.href?'a':'button');
-      el.className='step'+(done?' done':'')+(first===k?' cur':'');
-      if(m.href){el.href=m.href;}
-      el.innerHTML='<span class="ck">'+(done?'✓':'')+'</span><span>'+(i+1)+' · '+m.t+'<span class="sub">'+m.s+'</span></span>';
-      el.onclick=function(){
-        if(k==='video'){ if(p[k])DT.unmarkStep(ID,k); else DT.markStep(ID,k); paint();
-          document.getElementById('video').scrollIntoView({behavior:'smooth',block:'center'}); return; }
-        DT.markStep(ID,k);
-      };
-      box.appendChild(el);
-    });
-    document.getElementById('finish').classList.toggle('show',DT.isDone(C,L));
-  }
-  paint();
-  addEventListener('pageshow',paint);
-
-  var i=ls.indexOf(L), pv=ls[i-1], nx=ls[i+1];
-  if(pv&&pv.slug)document.getElementById('prevL').innerHTML='<a href="../'+pv.slug+'/">← Урок '+pv.n+'</a>';
-  if(nx)document.getElementById('nextL').innerHTML=nx.slug?'<a href="../'+nx.slug+'/">Урок '+nx.n+' →</a>':'Урок '+nx.n+' 🔒';
-
-  /* видео YouTube: отмечаем шаг, когда видео запустили */
-  if(L.video){
-    var t=document.createElement('script');t.src='https://www.youtube.com/iframe_api';document.head.appendChild(t);
-    window.onYouTubeIframeAPIReady=function(){
-      new YT.Player('yt',{videoId:L.video,host:'https://www.youtube-nocookie.com',
-        playerVars:{rel:0,modestbranding:1,playsinline:1},
-        events:{onStateChange:function(e){if(e.data===1){DT.markStep(ID,'video');paint();}}}});
+      video:{t:'Смотрим видео',s:'учитель объясняет урок',ic:'▶'},
+      prez:{t:'Презентация',s:'листаем слайды',href:'prezentaciya.html'},
+      doma:{t:'Читаем дома',s:'читаем вслух по рядам',href:'chitaem-doma.png'},
+      trainer:{t:'Тренажёр',s:'играем и повторяем',href:L.trainer}
     };
-  } else { document.getElementById('video').hidden=true; }
+    var steps=DT.stepsOf(L), box=document.getElementById('steps');
+    function paint(){
+      var p=DT.prog()[ID]||{}, first=null; box.innerHTML='';
+      steps.forEach(function(k,i){
+        var done=!!p[k]; if(!done&&first===null)first=k;
+        var m=META[k], el=document.createElement(m.href?'a':'button');
+        el.className='step'+(done?' done':'')+(first===k?' cur':'');
+        if(m.href){el.href=m.href;}
+        el.innerHTML='<span class="ck">'+(done?'✓':'')+'</span><span>'+(i+1)+' · '+m.t+'<span class="sub">'+m.s+'</span></span>';
+        el.onclick=function(){
+          if(k==='video'){ if(p[k])DT.unmarkStep(ID,k); else DT.markStep(ID,k); paint();
+            document.getElementById('video').scrollIntoView({behavior:'smooth',block:'center'}); return; }
+          DT.markStep(ID,k);
+        };
+        box.appendChild(el);
+      });
+      document.getElementById('finish').classList.toggle('show',DT.isDone(C,L));
+    }
+    paint();
+    addEventListener('pageshow',paint);
+  
+    var i=ls.indexOf(L), pv=ls[i-1], nx=ls[i+1];
+    if(pv&&DT.isOpen(C,pv))document.getElementById('prevL').innerHTML='<a href="../'+pv.slug+'/">← Урок '+pv.n+'</a>';
+    if(nx)document.getElementById('nextL').innerHTML=DT.isOpen(C,nx)?'<a href="../'+nx.slug+'/">Урок '+nx.n+' →</a>':'Урок '+nx.n+' 🔒';
+  
+    /* видео YouTube: отмечаем шаг, когда видео запустили */
+    if(L.video){
+      var t=document.createElement('script');t.src='https://www.youtube.com/iframe_api';document.head.appendChild(t);
+      window.onYouTubeIframeAPIReady=function(){
+        new YT.Player('yt',{videoId:L.video,host:'https://www.youtube-nocookie.com',
+          playerVars:{rel:0,modestbranding:1,playsinline:1},
+          events:{onStateChange:function(e){if(e.data===1){DT.markStep(ID,'video');paint();}}}});
+      };
+    } else { document.getElementById('video').hidden=true; }
+  });
 </script>
 </body></html>

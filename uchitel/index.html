@@ -16,13 +16,141 @@
 <meta name="twitter:card" content="summary_large_image">
 <!-- /og -->
 <link rel="stylesheet" href="../assets/site.css">
+<style>
+.grp{padding:16px;margin:10px 0}
+.grp .gh{display:flex;align-items:center;gap:12px}
+.grp h3{margin:0;font-size:18px;font-weight:800}.grp .st{font-size:13px;font-weight:600;color:var(--muted)}
+.grp .row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.b2{border:none;cursor:pointer;font:inherit;font-weight:800;font-size:14px;border-radius:12px;padding:10px 14px;background:rgba(255,255,255,.85);color:var(--ink);border:1px solid rgba(125,133,144,.25)}
+.b2.main{background:linear-gradient(135deg,var(--teal-a),var(--teal-b));color:#fff;border-color:transparent}
+.b2:disabled{opacity:.45;cursor:default}
+.warn{font-size:12.5px;font-weight:600;color:#9A6A12;margin-top:8px}
+.msg{font-size:13px;font-weight:700;margin-top:8px;min-height:18px}
+.msg.ok{color:var(--teal-b)}.msg.err{color:#C0392B}
+.keybox{padding:16px;margin:10px 0}
+.keybox input,.addg input{font:inherit;font-weight:600;font-size:15px;padding:10px 12px;border:1px solid rgba(125,133,144,.3);border-radius:12px;background:rgba(255,255,255,.9);min-width:0}
+.keybox input{width:100%;margin:8px 0}
+.keybox ol{margin:8px 0 0;padding-left:20px;font-size:13px;font-weight:500;color:var(--muted);line-height:1.6}
+.addg{display:flex;gap:8px;margin-top:6px}.addg input{flex:1;max-width:200px}
+.sec2{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold-deep);margin:26px 2px 6px}
+</style>
 </head><body><div class="page">
   <a class="back" href="../">← Главная</a>
   <h1><span class="gt">Для учителя</span></h1>
-  <p class="lead">Командные игры для Zoom (две команды)</p>
+  <p class="lead">Группы и игры для урока</p>
   <div class="divider"><i></i><em></em><i></i></div>
+
+  <div class="sec2">Группы · какие уроки открыты</div>
+  <div id="groups"></div>
+
+  <div class="keybox glass" id="keybox" hidden>
+    <b>Чтобы открывать уроки отсюда, нужен ключ GitHub</b> (один раз на этом устройстве).
+    <ol>
+      <li>Откройте <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" style="text-decoration:underline">github.com → новый ключ</a> (войдите в свой GitHub).</li>
+      <li>Название — любое, например «Сайт таджвида». Срок — 1 год.</li>
+      <li>Repository access → <b>Only select repositories</b> → <b>detskiy-tajweed</b>.</li>
+      <li>Permissions → Repository permissions → <b>Contents: Read and write</b>.</li>
+      <li>Generate token → скопируйте ключ и вставьте сюда.</li>
+    </ol>
+    <input id="keyIn" placeholder="github_pat_…" autocomplete="off">
+    <button class="b2 main" id="keyOk">Сохранить ключ</button>
+    <div class="msg" id="keyMsg"></div>
+    <div class="note">Ключ хранится только в этом браузере и даёт доступ только к этому сайту.</div>
+  </div>
+
+  <div id="addbox" hidden>
+    <div class="sec2">Новая группа</div>
+    <div class="addg"><input id="newG" placeholder="Номер, например 892" inputmode="numeric"><button class="b2 main" id="addG">Добавить</button></div>
+    <div class="msg" id="addMsg" data-g=""></div>
+  </div>
+
+  <div class="sec2">Командные игры для Zoom</div>
   <a class="g glass" href="../povtor/"><div class="ic sm teal"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.4 3-5 6-5s5.4 1.6 6 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.2c2.4.2 4 1.7 4.5 4.3"/></svg></div><div><b>Повторяем всё</b><span>шадда · танвин · хамзатуль-васль · слово «Аллах»</span></div></a>
   <a class="g glass" href="../nun/"><div class="ic sm teal"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.4 3-5 6-5s5.4 1.6 6 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.2c2.4.2 4 1.7 4.5 4.3"/></svg></div><div><b>Охота за нунами</b><span>правила нуна с сукуном и танвина</span></div></a>
   <a class="g glass" href="../mim/"><div class="ic sm teal"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.4 3-5 6-5s5.4 1.6 6 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.2c2.4.2 4 1.7 4.5 4.3"/></svg></div><div><b>Охота за мимами</b><span>правила мима с сукуном</span></div></a>
   <a class="g glass" href="../madd/"><div class="ic sm teal"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.4 3-5 6-5s5.4 1.6 6 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.2c2.4.2 4 1.7 4.5 4.3"/></svg></div><div><b>Охота за маддами</b><span>все восемь маддов</span></div></a>
-</div></body></html>
+
+  <div class="foot"><a href="#" id="forget" hidden>Убрать ключ с этого устройства</a></div>
+</div>
+<script src="../assets/lessons.js"></script>
+<script>
+(function(){
+  var OWNER='dzhos7465-dotcom', REPO='detskiy-tajweed', PATH='assets/groups.json';
+  var API='https://api.github.com/repos/'+OWNER+'/'+REPO+'/contents/'+PATH;
+  var SITE=location.origin+location.pathname.replace(/uchitel\/.*$/,'');
+  var LS=COURSES.nulevoy.lessons, KEY='dt_teacher_key';
+  var data={}, sha=null, busy=false, note=null;
+  function key(){try{return localStorage.getItem(KEY)||'';}catch(e){return '';}}
+  function $(id){return document.getElementById(id);}
+  function lesson(n){return LS.filter(function(l){return l.n===n;})[0];}
+  function ttl(n){var l=lesson(n);return l?('урок '+n+' · '+l.ru):('урок '+n);}
+  function b64(s){return btoa(unescape(encodeURIComponent(s)));}
+  function unb64(s){return decodeURIComponent(escape(atob(s.replace(/\s/g,''))));}
+
+  function loadData(cb){
+    if(key()){
+      fetch(API+'?t='+Date.now(),{headers:{Authorization:'Bearer '+key(),Accept:'application/vnd.github+json'},cache:'no-store'})
+        .then(function(r){if(!r.ok)throw r.status;return r.json();})
+        .then(function(j){sha=j.sha;data=JSON.parse(unb64(j.content));cb();})
+        .catch(function(e){ if(e===401||e===403){ $('keyMsg').className='msg err';$('keyMsg').textContent='Ключ не подошёл или устарел — вставьте новый.';
+            try{localStorage.removeItem(KEY);}catch(_){} } loadPublic(cb); });
+    } else loadPublic(cb);
+  }
+  function loadPublic(cb){
+    fetch('../assets/groups.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json();})
+      .then(function(j){data=j;cb();}).catch(function(){data={};cb();});
+  }
+  function save(msg,el,after){
+    if(busy)return; busy=true; el.className='msg';el.textContent='Сохраняю…';
+    fetch(API,{method:'PUT',headers:{Authorization:'Bearer '+key(),Accept:'application/vnd.github+json'},
+      body:JSON.stringify({message:msg,content:b64(JSON.stringify(data,null,2)+'\n'),sha:sha,branch:'main'})})
+      .then(function(r){return r.json().then(function(j){if(!r.ok)throw (j&&j.message)||r.status;return j;});})
+      .then(function(j){sha=j.content.sha;busy=false;note={g:el.getAttribute('data-g'),t:'Сохранено ✓ У детей обновится через 1–2 минуты.'};el.className='msg ok';el.textContent=note.t;if(after)after();})
+      .catch(function(e){busy=false;el.className='msg err';
+        el.textContent=(String(e).indexOf('does not match')>=0)?'Файл только что изменился — обновите страницу и повторите.':'Не сохранилось: '+e;
+        loadData(paint);});
+  }
+  function paint(){
+    var can=!!key(), box=$('groups'); box.innerHTML='';
+    $('keybox').hidden=can; $('addbox').hidden=!can; $('forget').hidden=!can;
+    var names=Object.keys(data).sort();
+    if(!names.length) box.innerHTML='<div class="grp glass">Групп пока нет.</div>';
+    names.forEach(function(g){
+      var o=data[g].open|0, nx=o+1, el=document.createElement('div');
+      el.className='grp glass tint-teal';
+      var link=SITE+'?g='+encodeURIComponent(g);
+      el.innerHTML='<div class="gh"><div class="ic sm teal" style="font-size:13px">'+g.slice(0,3)+'</div><div><h3>Группа '+g+'</h3>'+
+        '<div class="st">'+(o?('Открыто: уроки 1–'+o+' (последний — '+ttl(o)+')'):'Пока не открыто ни одного урока')+'</div></div></div>'+
+        (can?'<div class="row"><button class="b2 main" data-a="next"'+(lesson(nx)?'':' disabled')+'>Открыть '+(lesson(nx)?ttl(nx):'— уроков больше нет')+'</button>'+
+          '<button class="b2" data-a="back"'+(o>0?'':' disabled')+'>Закрыть урок '+o+'</button></div>':'')+
+        (can&&lesson(nx)&&!lesson(nx).slug?'<div class="warn">Урок '+nx+' ещё не выложен на сайт: у детей он появится, когда его выложат.</div>':'')+
+        '<div class="row"><button class="b2" data-a="copy">Скопировать ссылку группы</button></div>'+
+        '<div class="st" style="margin-top:6px;word-break:break-all">'+link+'</div><div class="msg'+(note&&note.g===g?' ok':'')+'" data-g="'+g+'">'+(note&&note.g===g?note.t:'')+'</div>';
+      var m=el.querySelector('.msg');
+      el.querySelectorAll('button').forEach(function(b){b.onclick=function(){
+        var a=b.getAttribute('data-a');
+        if(a==='copy'){ (navigator.clipboard?navigator.clipboard.writeText(link):Promise.reject()).then(function(){m.className='msg ok';m.textContent='Ссылка скопирована — отправьте её группе.';},
+          function(){m.className='msg';m.textContent='Скопируйте ссылку выше вручную.';}); return; }
+        if(a==='next'){ if(!confirm('Открыть группе '+g+' '+ttl(nx)+'?'))return; data[g].open=nx; save('Группа '+g+': открыт урок '+nx,m,paint); }
+        if(a==='back'){ if(!confirm('Закрыть группе '+g+' урок '+o+'?'))return; data[g].open=o-1; save('Группа '+g+': закрыт урок '+o,m,paint); }
+      };});
+      box.appendChild(el);
+    });
+  }
+  $('keyOk').onclick=function(){
+    var k=$('keyIn').value.trim(); if(!k)return; var m=$('keyMsg'); m.className='msg';m.textContent='Проверяю…';
+    fetch(API,{headers:{Authorization:'Bearer '+k,Accept:'application/vnd.github+json'}}).then(function(r){
+      if(!r.ok)throw r.status; try{localStorage.setItem(KEY,k);}catch(e){} $('keyIn').value=''; m.textContent=''; loadData(paint);
+    }).catch(function(){m.className='msg err';m.textContent='Ключ не подошёл. Проверьте шаги 3–4 (доступ к detskiy-tajweed, Contents: Read and write).';});
+  };
+  $('addG').onclick=function(){
+    var g=$('newG').value.trim().replace(/\s+/g,''), m=$('addMsg');
+    if(!/^[0-9A-Za-zА-Яа-я_-]{1,12}$/.test(g)){m.className='msg err';m.textContent='Напишите номер группы (цифры или буквы, без пробелов).';return;}
+    if(data[g]){m.className='msg err';m.textContent='Такая группа уже есть.';return;}
+    data[g]={open:0}; save('Новая группа '+g,m,function(){$('newG').value='';paint();});
+  };
+  $('forget').onclick=function(e){e.preventDefault();if(confirm('Убрать ключ с этого устройства?')){try{localStorage.removeItem(KEY);}catch(_){}paint();}};
+  loadData(paint);
+})();
+</script>
+</body></html>

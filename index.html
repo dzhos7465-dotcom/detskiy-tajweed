@@ -90,6 +90,8 @@
       go.innerHTML='▶&nbsp; '+(s.done?'Продолжить: урок ':'Начать: урок ')+cur.n;
       document.getElementById('nextAr').innerHTML=cur.ar?arHtml(cur.ar):'';
       document.getElementById('nextRu').textContent='Урок '+cur.n+' · '+cur.ru.charAt(0).toUpperCase()+cur.ru.slice(1);
+    } else if(!DT.hasGroup()) {
+      go.href='nulevoy/'; go.textContent='Попроси у учителя ссылку своей группы'; nx.style.display='none';
     } else {
       go.href='nulevoy/'; go.textContent='Все открытые уроки пройдены ✓'; nx.style.display='none';
     }
@@ -101,7 +103,7 @@
   inp.oninput=function(){err.textContent='';};
   document.getElementById('notme').onclick=function(e){e.preventDefault();
     if(confirm('Начать заново? Имя и отметки на этом устройстве сотрутся.')){DT.clearAll();inp.value='';paint();}};
-  paint();
-  addEventListener('pageshow',paint);
+  DT.load(paint);
+  addEventListener('pageshow',function(e){if(e.persisted)DT.load(paint);});
 </script>
 </body></html>

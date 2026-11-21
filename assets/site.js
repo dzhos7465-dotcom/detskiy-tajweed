@@ -1,6 +1,7 @@
 /* Общие функции сайта. Всё хранится только в браузере ребёнка. */
 (function(){
-  var KEY_NAME='dt_name', KEY_PROG='dt_progress';
+  var KEY_NAME='dt_name', KEY_PROG='dt_progress', KEY_GROUP='dt_group';
+  var GROUPS=null; /* {"891":{"open":5}} — сколько уроков открыто группе; грузится из assets/groups.json */
   function get(k,d){try{var v=localStorage.getItem(k);return v===null?d:JSON.parse(v);}catch(e){return d;}}
   function set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
 
@@ -19,15 +20,31 @@
   function doneCount(course,l){var p=prog()[lessonId(course,l)]||{};return stepsOf(l).filter(function(s){return p[s];}).length;}
   function isDone(course,l){return doneCount(course,l)===stepsOf(l).length;}
 
+  /* группа ребёнка: приходит по ссылке ?g=891 и запоминается на устройстве */
+  (function(){var m=location.search.match(/[?&]g=([^&#]+)/);if(m)set(KEY_GROUP,decodeURIComponent(m[1]));})();
+  function group(){return get(KEY_GROUP,'');}
+  function openUpTo(){var g=group();return (GROUPS&&g&&GROUPS[g])?(GROUPS[g].open|0):0;}
+  function hasGroup(){var g=group();return !!(GROUPS&&g&&GROUPS[g]);}
+  /* урок открыт, если его файлы на сайте (slug) и учитель открыл его группе */
+  function isOpen(course,l){return !!l.slug&&(course!=='nulevoy'||l.n<=openUpTo());}
+
   /* текущий урок: первый открытый и не пройденный */
   function current(course){
     var ls=window.COURSES[course].lessons;
-    for(var i=0;i<ls.length;i++){if(ls[i].slug&&!isDone(course,ls[i]))return ls[i];}
+    for(var i=0;i<ls.length;i++){if(isOpen(course,ls[i])&&!isDone(course,ls[i]))return ls[i];}
     return null;
   }
   function stats(course){
     var ls=window.COURSES[course].lessons;
-    return {total:ls.length,done:ls.filter(function(l){return l.slug&&isDone(course,l);}).length};
+    return {total:ls.length,done:ls.filter(function(l){return isOpen(course,l)&&isDone(course,l);}).length};
+  }
+  /* загрузка настроек групп (свежая, мимо кэша), затем cb() */
+  function load(cb){
+    var base=document.querySelector('script[src$="site.js"]').getAttribute('src').replace(/site\.js$/,'');
+    var done=false;function fin(){if(!done){done=true;cb();}}
+    fetch(base+'groups.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json();})
+      .then(function(j){GROUPS=j;fin();}).catch(function(){GROUPS=GROUPS||{};fin();});
+    setTimeout(function(){if(!GROUPS)GROUPS={};fin();},6000);
   }
 
   window.DT={
@@ -35,6 +52,7 @@
     setName:function(n){set(KEY_NAME,n);},
     clearAll:function(){try{localStorage.removeItem(KEY_NAME);localStorage.removeItem(KEY_PROG);}catch(e){}},
     stepsOf:stepsOf,lessonId:lessonId,prog:prog,markStep:markStep,unmarkStep:unmarkStep,
-    doneCount:doneCount,isDone:isDone,current:current,stats:stats
+    doneCount:doneCount,isDone:isDone,current:current,stats:stats,
+    group:group,hasGroup:hasGroup,openUpTo:openUpTo,isOpen:isOpen,load:load
   };
 })();
