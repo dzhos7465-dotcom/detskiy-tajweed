@@ -15,62 +15,84 @@
 <meta property="og:locale" content="ru_RU">
 <meta name="twitter:card" content="summary_large_image">
 <!-- /og -->
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/site.css">
 </head><body><div class="page">
   <div class="top"><span class="brand">Детский таджвид</span><a class="small-link" id="notme" href="#" hidden>Это не я</a></div>
 
-  <div class="salam">
-    <div class="s-ar ar">السَّلَامُ عَلَيْكُمْ</div>
-    <div class="s-ru" id="hello">Ассаляму алейкум!</div>
+  <div class="hdr">
+    <div class="ros"></div>
+    <div><div class="s-ar ar gt">السَّلَامُ عَلَيْكُمْ</div><div class="s-ru" id="hello">Ассаляму алейкум!</div></div>
   </div>
 
-  <div class="namebox" id="namebox" hidden>
+  <div class="namebox glass" id="namebox" hidden>
     <p>Как тебя зовут?</p>
     <div class="row"><input id="nameIn" maxlength="20" autocomplete="off" placeholder="Амина"><button class="btn" id="nameOk">Готово</button></div>
     <div class="err" id="nameErr"></div>
-    <div class="note">Имя остаётся только на этом телефоне</div>
+    <div class="note">Имя остаётся только на этом устройстве</div>
   </div>
 
-  <div class="doors">
-    <a class="door teal" href="nulevoy/">
-      <div class="ic">📖</div>
-      <h2>Нулевой курс</h2>
-      <div class="sub">Учимся читать</div>
+  <div class="blocks">
+    <section class="block glass tint-teal">
+      <a class="head" href="nulevoy/"><div class="ic teal">0</div><div><h2>Нулевой курс</h2><div class="sub">Учимся читать</div></div></a>
       <div class="bar"><i id="bar0" style="width:0"></i></div>
-      <div class="sub" id="cnt0" style="margin-top:6px"></div>
-      <div class="go" id="go0">Начать →</div>
-    </a>
-    <a class="door violet" href="perviy/">
-      <div class="ic">✨</div>
-      <h2>Первый курс</h2>
-      <div class="sub">Правила таджвида</div>
-      <div class="bar"><i id="bar1" style="width:0"></i></div>
-      <div class="sub" id="cnt1" style="margin-top:6px"></div>
-      <div class="go">Открыть →</div>
-    </a>
-  </div>
+      <div class="meta"><span id="cnt0"></span><a href="nulevoy/" style="text-decoration:underline;text-underline-offset:3px">все уроки</a></div>
+      <a class="next" id="next0" href="nulevoy/"><div class="a ar gt" id="nextAr"></div><div class="r" id="nextRu"></div></a>
+      <a class="cta" id="go0" href="nulevoy/">▶&nbsp; Начать</a>
+    </section>
 
-  <div class="trainers">🎮 Тренажёры <span class="list"><a href="mim/doma/">Мимы дома</a><a href="nun/doma/">Нуны дома</a><a href="madd/doma/">Мадды дома</a></span></div>
+    <section class="block glass tint-violet">
+      <a class="head" href="perviy/"><div class="ic violet">1</div><div><h2>Первый курс</h2><div class="sub">Правила таджвида</div></div></a>
+      <div class="deco"><div class="ros"></div><p>Здесь будут уроки по правилам таджвида.<br>А пока — повторяем в тренажёрах.</p></div>
+      <div class="spacer"></div>
+      <a class="cta ghost" href="perviy/">Откроется после нулевого</a>
+    </section>
+
+    <section class="block glass tint-gold">
+      <div class="head"><div class="ic gold"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2.8l2.7 5.9 6.4.7-4.8 4.3 1.4 6.3L12 16.8 6.3 20l1.4-6.3L2.9 9.4l6.4-.7z"/></svg></div><div><h2>Тренажёры</h2><div class="sub">Повторяем правила играя</div></div></div>
+      <div class="halves">
+        <div class="half">
+          <div class="hh"><div class="ic sm teal"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.4 3-5 6-5s5.4 1.6 6 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.2c2.4.2 4 1.7 4.5 4.3"/></svg></div><h3>На уроке</h3></div>
+          <small>играем вместе, две команды</small>
+          <a class="li" href="povtor/">Повторяем всё</a>
+          <a class="li" href="mim/">Охота за мимами</a>
+          <a class="li" href="nun/">Охота за нунами</a>
+          <a class="li" href="madd/">Охота за маддами</a>
+        </div>
+        <div class="half">
+          <div class="hh"><div class="ic sm sky"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M4 11 12 4l8 7v9H4z"/><path d="M10 20v-5h4v5"/></svg></div><h3>Дома</h3></div>
+          <small>сам: звёзды и работа над ошибками</small>
+          <a class="li" href="mim/doma/">Мимы дома</a>
+          <a class="li" href="nun/doma/">Нуны дома</a>
+          <a class="li" href="madd/doma/">Мадды дома</a>
+        </div>
+      </div>
+    </section>
+  </div>
 
   <div class="foot"><a href="uchitel/">Для учителя</a></div>
 </div>
 <script src="assets/lessons.js"></script>
 <script src="assets/site.js"></script>
 <script>
+  function arHtml(t){return t.replace(/ي/g,'<span class="ya">ي</span>');}
   function paint(){
     var n=DT.getName();
-    document.getElementById('hello').textContent=n?('Ассаляму алейкум, '+n+'!'):'Ассаляму алейкум!';
+    document.getElementById('hello').textContent=n?(n+', продолжим?'):'Ассаляму алейкум!';
     document.getElementById('namebox').hidden=!!n;
     document.getElementById('notme').hidden=!n;
-    [['nulevoy',0],['perviy',1]].forEach(function(c){
-      var s=DT.stats(c[0]);
-      document.getElementById('bar'+c[1]).style.width=(s.total?Math.round(100*s.done/s.total):0)+'%';
-      document.getElementById('cnt'+c[1]).textContent=s.total?('пройдено '+s.done+' из '+s.total):'уроки скоро появятся';
-    });
-    var cur=DT.current('nulevoy'), go=document.getElementById('go0');
-    if(cur){go.textContent=(DT.stats('nulevoy').done?'Продолжить: урок ':'Начать: урок ')+cur.n+' →';}
-    else{go.textContent='Все открытые уроки пройдены ✓';}
+    var s=DT.stats('nulevoy');
+    document.getElementById('bar0').style.width=(s.total?Math.round(100*s.done/s.total):0)+'%';
+    document.getElementById('cnt0').textContent='пройдено '+s.done+' из '+s.total;
+    var cur=DT.current('nulevoy'), go=document.getElementById('go0'), nx=document.getElementById('next0');
+    if(cur){
+      var href='nulevoy/'+cur.slug+'/';
+      go.href=href; nx.href=href;
+      go.innerHTML='▶&nbsp; '+(s.done?'Продолжить: урок ':'Начать: урок ')+cur.n;
+      document.getElementById('nextAr').innerHTML=cur.ar?arHtml(cur.ar):'';
+      document.getElementById('nextRu').textContent='Урок '+cur.n+' · '+cur.ru.charAt(0).toUpperCase()+cur.ru.slice(1);
+    } else {
+      go.href='nulevoy/'; go.textContent='Все открытые уроки пройдены ✓'; nx.style.display='none';
+    }
   }
   var inp=document.getElementById('nameIn'),err=document.getElementById('nameErr');
   function save(){var v=inp.value.trim();if(!v){err.textContent='Напиши своё имя';return;}DT.setName(v);paint();}
@@ -78,7 +100,8 @@
   inp.onkeydown=function(e){if(e.key==='Enter')save();};
   inp.oninput=function(){err.textContent='';};
   document.getElementById('notme').onclick=function(e){e.preventDefault();
-    if(confirm('Начать заново? Имя и отметки на этом телефоне сотрутся.')){DT.clearAll();inp.value='';paint();}};
+    if(confirm('Начать заново? Имя и отметки на этом устройстве сотрутся.')){DT.clearAll();inp.value='';paint();}};
   paint();
+  addEventListener('pageshow',paint);
 </script>
 </body></html>

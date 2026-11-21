@@ -14,12 +14,12 @@
 <meta property="og:locale" content="ru_RU">
 <meta name="twitter:card" content="summary_large_image">
 <!-- /og -->
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../assets/site.css">
 </head><body><div class="page">
   <a class="back" href="../">← Нулевой курс</a>
   <h1 id="ttl">Урок</h1>
   <p class="lead" id="sub"></p>
+  <div class="divider"><i></i><em></em><i></i></div>
   <div class="lesson-grid">
     <div class="video" id="video"><div id="yt"></div></div>
     <div>
@@ -35,7 +35,7 @@
   var C='nulevoy', SLUG=location.pathname.split('/').filter(Boolean).slice(-1)[0];
   var ls=COURSES[C].lessons, L=ls.find(function(x){return x.slug===SLUG;})||ls[0], ID=DT.lessonId(C,L);
   document.title='Урок '+L.n+' · Нулевой курс';
-  document.getElementById('ttl').innerHTML='Урок '+L.n+(L.ar?' · <span class="ar">'+L.ar+'</span>':'');
+  document.getElementById('ttl').innerHTML='<span class="gt">Урок '+L.n+'</span>'+(L.ar?' · <span class="ar gt">'+L.ar.replace(/ي/g,'<span class="ya">ي</span>')+'</span>':'');
   document.getElementById('sub').textContent=L.ru.charAt(0).toUpperCase()+L.ru.slice(1);
 
   var META={

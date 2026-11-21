@@ -15,12 +15,12 @@
 <meta property="og:locale" content="ru_RU">
 <meta name="twitter:card" content="summary_large_image">
 <!-- /og -->
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/site.css">
 </head><body><div class="page">
   <a class="back" href="../">← Главная</a>
-  <h1>Нулевой курс</h1>
+  <h1><span class="gt">Нулевой курс</span></h1>
   <p class="lead" id="lead">Учимся читать</p>
+  <div class="divider"><i></i><em></em><i></i></div>
   <div class="lessons" id="list"></div>
   <a class="next-course" href="../perviy/">Дальше: Первый курс →</a>
 </div>
@@ -29,15 +29,17 @@
 <script>
   var C='nulevoy', ls=COURSES[C].lessons, cur=DT.current(C), s=DT.stats(C), list=document.getElementById('list');
   document.getElementById('lead').textContent='Учимся читать · пройдено '+s.done+' из '+s.total;
+  function arHtml(t){return t.replace(/ي/g,'<span class="ya">ي</span>');}
   ls.forEach(function(l){
     var open=!!l.slug, done=open&&DT.isDone(C,l), here=cur&&cur.n===l.n;
     var el=document.createElement(open?'a':'div');
-    el.className='les'+(done?' done':here?' here':!open?' locked':'');
+    el.className='les glass'+(done?' done':here?' here':!open?' locked':'');
     if(open) el.href=l.slug+'/';
-    var st=done?'✓ пройден':here?(DT.doneCount(C,l)?'ты здесь':'начни здесь'):!open?'🔒':'';
-    el.innerHTML='<span class="num">'+l.n+'</span><span class="t">'+
-      (l.ar?'<span class="a ar">'+l.ar+'</span>':'')+'<span class="r">'+l.ru+'</span></span>'+
-      '<span class="st">'+st+'</span>';
+    var st=done?'✓ пройден':here?(DT.doneCount(C,l)?'ты здесь':'начни здесь'):!open?'🔒 откроет учитель':'открыт';
+    var ru=l.ru.charAt(0).toUpperCase()+l.ru.slice(1);
+    el.innerHTML='<span class="num"><span>'+l.n+'</span></span><span class="t"><span class="r">'+ru+'</span><span class="st">'+st+'</span></span>'+
+      (l.ar?'<span class="a ar'+(here?' gt':'')+'">'+arHtml(l.ar)+'</span>':'')+
+      (here?'<span class="go">'+(DT.doneCount(C,l)?'Продолжить урок':'Начать урок')+'</span>':'');
     list.appendChild(el);
   });
 </script>
