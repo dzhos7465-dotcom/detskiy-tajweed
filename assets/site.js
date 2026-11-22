@@ -20,13 +20,24 @@
   function doneCount(course,l){var p=prog()[lessonId(course,l)]||{};return stepsOf(l).filter(function(s){return p[s];}).length;}
   function isDone(course,l){return doneCount(course,l)===stepsOf(l).length;}
 
-  /* группа ребёнка: приходит по ссылке ?g=891 и запоминается на устройстве */
+  /* группа ребёнка: приходит по ссылке ?g=891-k7f3q9 (номер + секретный хвост) и запоминается на устройстве */
   (function(){var m=location.search.match(/[?&]g=([^&#]+)/);if(m)set(KEY_GROUP,decodeURIComponent(m[1]));})();
   function group(){return get(KEY_GROUP,'');}
-  function openUpTo(){var g=group();return (GROUPS&&g&&GROUPS[g])?(GROUPS[g].open|0):0;}
-  function hasGroup(){var g=group();return !!(GROUPS&&g&&GROUPS[g]);}
+  function groupName(){return String(group()).split('-')[0];}
+  /* настройки группы — только если хвост ссылки совпал с секретом группы */
+  function grp(){
+    var g=String(group()), i=g.indexOf('-'), name=i<0?g:g.slice(0,i), code=i<0?'':g.slice(i+1);
+    var o=GROUPS&&name&&GROUPS[name]; if(!o)return null;
+    return (!o.code||o.code===code)?o:null;
+  }
+  /* устройство учителя (на нём сохранён ключ со страницы «Для учителя») видит всё */
+  function isTeacher(){try{return !!localStorage.getItem('dt_teacher_key');}catch(e){return false;}}
+  function openUpTo(){var o=grp();return o?(o.open|0):0;}
+  function hasGroup(){return !!grp();}
   /* урок открыт, если его файлы на сайте (slug) и учитель открыл его группе */
-  function isOpen(course,l){return !!l.slug&&(course!=='nulevoy'||l.n<=openUpTo());}
+  function isOpen(course,l){return !!l.slug&&(isTeacher()||course!=='nulevoy'||l.n<=openUpTo());}
+  /* тренажёр открыт группе? */
+  function trOpen(id){if(isTeacher())return true;var o=grp();return !!(o&&o.tr&&o.tr.indexOf(id)>=0);}
 
   /* текущий урок: первый открытый и не пройденный */
   function current(course){
@@ -53,6 +64,7 @@
     clearAll:function(){try{localStorage.removeItem(KEY_NAME);localStorage.removeItem(KEY_PROG);}catch(e){}},
     stepsOf:stepsOf,lessonId:lessonId,prog:prog,markStep:markStep,unmarkStep:unmarkStep,
     doneCount:doneCount,isDone:isDone,current:current,stats:stats,
-    group:group,hasGroup:hasGroup,openUpTo:openUpTo,isOpen:isOpen,load:load
+    group:group,groupName:groupName,hasGroup:hasGroup,openUpTo:openUpTo,isOpen:isOpen,load:load,
+    trOpen:trOpen,isTeacher:isTeacher
   };
 })();

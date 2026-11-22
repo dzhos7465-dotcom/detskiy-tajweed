@@ -53,29 +53,34 @@
         <div class="half">
           <div class="hh"><div class="ic sm teal"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c.6-3.4 3-5 6-5s5.4 1.6 6 5"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.2c2.4.2 4 1.7 4.5 4.3"/></svg></div><h3>На уроке</h3></div>
           <small>играем вместе, две команды</small>
-          <a class="li" href="povtor/">Повторяем всё</a>
-          <a class="li" href="mim/">Охота за мимами</a>
-          <a class="li" href="nun/">Охота за нунами</a>
-          <a class="li" href="madd/">Охота за маддами</a>
+          <div id="trClass"></div>
         </div>
         <div class="half">
           <div class="hh"><div class="ic sm sky"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M4 11 12 4l8 7v9H4z"/><path d="M10 20v-5h4v5"/></svg></div><h3>Дома</h3></div>
           <small>сам: звёзды и работа над ошибками</small>
-          <a class="li" href="mim/doma/">Мимы дома</a>
-          <a class="li" href="nun/doma/">Нуны дома</a>
-          <a class="li" href="madd/doma/">Мадды дома</a>
+          <div id="trHome"></div>
         </div>
       </div>
     </section>
   </div>
 
-  <div class="foot"><a href="uchitel/">Для учителя</a></div>
+  <div class="foot"><span id="teacherNote" hidden>Режим учителя: на этом устройстве видно всё · </span><a href="uchitel/">Для учителя</a></div>
 </div>
 <script src="assets/lessons.js"></script>
+<script src="assets/trainers.js"></script>
 <script src="assets/site.js"></script>
 <script>
   function arHtml(t){return t.replace(/ي/g,'<span class="ya">ي</span>');}
+  function paintTr(){
+    ['class','home'].forEach(function(k){
+      var box=document.getElementById(k==='class'?'trClass':'trHome'), h='';
+      TRAINERS.forEach(function(t){ if(t.kind===k&&DT.trOpen(t.id)) h+='<a class="li" href="'+t.href+'">'+t.t+'</a>'; });
+      box.innerHTML=h||'<div class="li-empty">🔒 откроет учитель</div>';
+    });
+  }
   function paint(){
+    paintTr();
+    document.getElementById('teacherNote').hidden=!DT.isTeacher();
     var n=DT.getName();
     document.getElementById('hello').textContent=n?(n+', продолжим?'):'Ассаляму алейкум!';
     document.getElementById('namebox').hidden=!!n;

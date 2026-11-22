@@ -32,6 +32,11 @@
 .keybox input{width:100%;margin:8px 0}
 .keybox ol{margin:8px 0 0;padding-left:20px;font-size:13px;font-weight:500;color:var(--muted);line-height:1.6}
 .addg{display:flex;gap:8px;margin-top:6px}.addg input{flex:1;max-width:200px}
+.tg{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.tg button{border:1px solid rgba(125,133,144,.28);background:rgba(255,255,255,.8);color:var(--muted);font:inherit;font-weight:700;font-size:13px;padding:8px 11px;border-radius:99px;cursor:pointer}
+.tg button.on{background:linear-gradient(135deg,var(--teal-a),var(--teal-b));color:#fff;border-color:transparent}
+.tg button.on::before{content:"✓ "}
+.lbl2{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:14px}
 .sec2{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold-deep);margin:26px 2px 6px}
 </style>
 </head><body><div class="page">
@@ -40,7 +45,7 @@
   <p class="lead">Группы и игры для урока</p>
   <div class="divider"><i></i><em></em><i></i></div>
 
-  <div class="sec2">Группы · какие уроки открыты</div>
+  <div class="sec2" id="grTitle">Группы · что открыто ученикам</div>
   <div id="groups"></div>
 
   <div class="keybox glass" id="keybox" hidden>
@@ -73,6 +78,7 @@
   <div class="foot"><a href="#" id="forget" hidden>Убрать ключ с этого устройства</a></div>
 </div>
 <script src="../assets/lessons.js"></script>
+<script src="../assets/trainers.js"></script>
 <script>
 (function(){
   var OWNER='dzhos7465-dotcom', REPO='detskiy-tajweed', PATH='assets/groups.json';
@@ -110,29 +116,44 @@
         el.textContent=(String(e).indexOf('does not match')>=0)?'Файл только что изменился — обновите страницу и повторите.':'Не сохранилось: '+e;
         loadData(paint);});
   }
+  function rnd(){var a='abcdefghijkmnpqrstuvwxyz23456789',r='',c=window.crypto&&crypto.getRandomValues?crypto.getRandomValues(new Uint32Array(6)):null;
+    for(var i=0;i<6;i++)r+=a[(c?c[i]:Math.floor(Math.random()*1e9))%a.length];return r;}
   function paint(){
     var can=!!key(), box=$('groups'); box.innerHTML='';
-    $('keybox').hidden=can; $('addbox').hidden=!can; $('forget').hidden=!can;
+    $('keybox').hidden=can; $('addbox').hidden=!can; $('forget').hidden=!can; $('grTitle').hidden=!can;
+    if(!can) return;   /* без ключа — ни групп, ни ссылок */
     var names=Object.keys(data).sort();
-    if(!names.length) box.innerHTML='<div class="grp glass">Групп пока нет.</div>';
+    if(!names.length) box.innerHTML='<div class="grp glass">Групп пока нет — добавьте ниже.</div>';
     names.forEach(function(g){
-      var o=data[g].open|0, nx=o+1, el=document.createElement('div');
+      var G=data[g], o=G.open|0, nx=o+1, tr=G.tr||[], el=document.createElement('div');
       el.className='grp glass tint-teal';
-      var link=SITE+'?g='+encodeURIComponent(g);
+      var link=G.code?(SITE+'?g='+encodeURIComponent(g+'-'+G.code)):'';
+      function tgl(kind){return TRAINERS.filter(function(t){return t.kind===kind;}).map(function(t){
+        return '<button data-a="tr" data-id="'+t.id+'" class="'+(tr.indexOf(t.id)>=0?'on':'')+'">'+t.t+'</button>';}).join('');}
       el.innerHTML='<div class="gh"><div class="ic sm teal" style="font-size:13px">'+g.slice(0,3)+'</div><div><h3>Группа '+g+'</h3>'+
-        '<div class="st">'+(o?('Открыто: уроки 1–'+o+' (последний — '+ttl(o)+')'):'Пока не открыто ни одного урока')+'</div></div></div>'+
-        (can?'<div class="row"><button class="b2 main" data-a="next"'+(lesson(nx)?'':' disabled')+'>Открыть '+(lesson(nx)?ttl(nx):'— уроков больше нет')+'</button>'+
-          '<button class="b2" data-a="back"'+(o>0?'':' disabled')+'>Закрыть урок '+o+'</button></div>':'')+
-        (can&&lesson(nx)&&!lesson(nx).slug?'<div class="warn">Урок '+nx+' ещё не выложен на сайт: у детей он появится, когда его выложат.</div>':'')+
-        '<div class="row"><button class="b2" data-a="copy">Скопировать ссылку группы</button></div>'+
-        '<div class="st" style="margin-top:6px;word-break:break-all">'+link+'</div><div class="msg'+(note&&note.g===g?' ok':'')+'" data-g="'+g+'">'+(note&&note.g===g?note.t:'')+'</div>';
+        '<div class="st">'+(o?('Уроки открыты: 1–'+o+' (последний — '+ttl(o)+')'):'Пока не открыто ни одного урока')+'</div></div></div>'+
+        '<div class="lbl2">Уроки нулевого курса</div>'+
+        '<div class="row"><button class="b2 main" data-a="next"'+(lesson(nx)?'':' disabled')+'>Открыть '+(lesson(nx)?ttl(nx):'— уроков больше нет')+'</button>'+
+          '<button class="b2" data-a="back"'+(o>0?'':' disabled')+'>Закрыть урок '+o+'</button></div>'+
+        (lesson(nx)&&!lesson(nx).slug?'<div class="warn">Урок '+nx+' ещё не выложен на сайт: у детей он появится, когда его выложат.</div>':'')+
+        '<div class="lbl2">Тренажёры — на уроке (нажмите, чтобы открыть или закрыть)</div><div class="tg">'+tgl('class')+'</div>'+
+        '<div class="lbl2">Тренажёры — дома</div><div class="tg">'+tgl('home')+'</div>'+
+        '<div class="lbl2">Ссылка для группы</div>'+
+        (link?'<div class="row"><button class="b2" data-a="copy">Скопировать ссылку группы</button></div>'+
+              '<div class="st" style="margin-top:6px;word-break:break-all">'+link+'</div>'
+            :'<div class="row"><button class="b2 main" data-a="code">Сделать ссылку группы</button></div>')+
+        '<div class="msg'+(note&&note.g===g?' ok':'')+'" data-g="'+g+'">'+(note&&note.g===g?note.t:'')+'</div>';
       var m=el.querySelector('.msg');
       el.querySelectorAll('button').forEach(function(b){b.onclick=function(){
         var a=b.getAttribute('data-a');
         if(a==='copy'){ (navigator.clipboard?navigator.clipboard.writeText(link):Promise.reject()).then(function(){m.className='msg ok';m.textContent='Ссылка скопирована — отправьте её группе.';},
           function(){m.className='msg';m.textContent='Скопируйте ссылку выше вручную.';}); return; }
-        if(a==='next'){ if(!confirm('Открыть группе '+g+' '+ttl(nx)+'?'))return; data[g].open=nx; save('Группа '+g+': открыт урок '+nx,m,paint); }
-        if(a==='back'){ if(!confirm('Закрыть группе '+g+' урок '+o+'?'))return; data[g].open=o-1; save('Группа '+g+': закрыт урок '+o,m,paint); }
+        if(a==='next'){ if(!confirm('Открыть группе '+g+' '+ttl(nx)+'?'))return; G.open=nx; save('Группа '+g+': открыт урок '+nx,m,paint); }
+        if(a==='back'){ if(!confirm('Закрыть группе '+g+' урок '+o+'?'))return; G.open=o-1; save('Группа '+g+': закрыт урок '+o,m,paint); }
+        if(a==='tr'){ var id=b.getAttribute('data-id'), t=TRAINERS.filter(function(x){return x.id===id;})[0], i=tr.indexOf(id);
+          if(i>=0)tr.splice(i,1);else tr.push(id); G.tr=tr;
+          save('Группа '+g+': '+(i>=0?'закрыт':'открыт')+' тренажёр «'+t.t+'»',m,paint); }
+        if(a==='code'){ G.code=rnd(); save('Группа '+g+': новая ссылка',m,paint); }
       };});
       box.appendChild(el);
     });
@@ -147,7 +168,7 @@
     var g=$('newG').value.trim().replace(/\s+/g,''), m=$('addMsg');
     if(!/^[0-9A-Za-zА-Яа-я_-]{1,12}$/.test(g)){m.className='msg err';m.textContent='Напишите номер группы (цифры или буквы, без пробелов).';return;}
     if(data[g]){m.className='msg err';m.textContent='Такая группа уже есть.';return;}
-    data[g]={open:0}; save('Новая группа '+g,m,function(){$('newG').value='';paint();});
+    data[g]={open:0,code:rnd(),tr:[]}; save('Новая группа '+g,m,function(){$('newG').value='';paint();});
   };
   $('forget').onclick=function(e){e.preventDefault();if(confirm('Убрать ключ с этого устройства?')){try{localStorage.removeItem(KEY);}catch(_){}paint();}};
   loadData(paint);

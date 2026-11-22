@@ -32,8 +32,8 @@
   function arHtml(t){return t.replace(/ي/g,'<span class="ya">ي</span>');}
   function paint(){
     var cur=DT.current(C), s=DT.stats(C); list.innerHTML='';
-    document.getElementById('lead').textContent='Учимся читать · пройдено '+s.done+' из '+s.total+(DT.group()?' · группа '+DT.group():'');
-    document.getElementById('nogroup').hidden=DT.hasGroup();
+    document.getElementById('lead').textContent='Учимся читать · пройдено '+s.done+' из '+s.total+(DT.hasGroup()?' · группа '+DT.groupName():'');
+    document.getElementById('nogroup').hidden=DT.hasGroup()||DT.isTeacher();
     ls.forEach(function(l){
       var open=DT.isOpen(C,l), done=open&&DT.isDone(C,l), here=cur&&cur.n===l.n;
       var el=document.createElement(open?'a':'div');

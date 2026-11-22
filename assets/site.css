@@ -178,3 +178,4 @@ h1 .ar{font-size:1.15em}
 .empty .btn{margin:4px}
 .notice{padding:18px;text-align:center;font-weight:600;color:var(--ink);line-height:1.55;margin-bottom:14px}
 [hidden]{display:none!important}
+.li-empty{font-size:13px;font-weight:600;color:var(--muted);padding:9px 0}
