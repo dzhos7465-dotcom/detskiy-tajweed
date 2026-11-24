@@ -560,7 +560,7 @@ function render(anim=true){
     h='<div class="salam-ar">السَّلَامُ عَلَيْكُمْ</div><div class="gtitle">Пробный экзамен</div>'+
       '<div class="gsub">Нун · мим · мадд · шадда · танвин · хамзатуль-васль · слово '+AR('ٱللَّه')+'</div><div class="flourish"><span class="dia"></span></div>'+
       '<div class="setup">'+[0,1].map(t=>'<div class="tcard '+(t?'b':'a')+'"><div class="tl">Команда '+(t+1)+'</div>'+
-        embHTML(t,'e'+t)+'<div class="tip">нажмите, чтобы сменить</div>'+
+        embHTML(t,'e'+t)+'<div class="tip">нажмите на эмблему — сменить · название можно написать своё</div>'+
         '<input id="n'+t+'" maxlength="14" value="'+esc(G.names[t])+'"></div>').join('')+'</div>'+
       '<div class="startrow"><button class="btn main" id="go">Начинаем ›</button><button class="btn" id="reset">Новая игра</button></div>';
   }
@@ -628,9 +628,10 @@ function bind(){
   if(s.type==='title'){
     [0,1].forEach(t=>{
       const box=$('e'+t), show=()=>{box.textContent=emb(t);box.classList.remove('pop');void box.offsetWidth;box.classList.add('pop');};
-      $('n'+t).oninput=e=>{const old=emb(t);G.names[t]=e.target.value||('Команда '+(t+1));G.emb[t]=null;save();if(emb(t)!==old){show();sPop();}};
+      $('n'+t).oninput=e=>{const old=emb(t);G.names[t]=e.target.value||('Команда '+(t+1));save();if(emb(t)!==old){show();sPop();}};
       box.onclick=()=>{const i=(PICK.findIndex(p=>p[0]===emb(t))+1)%PICK.length;
-        G.emb[t]=null;G.names[t]=PICK[i][1];$('n'+t).value=PICK[i][1];save();show();sPop();};
+        const keep=G.names[t]&&!PICK.some(p=>p[1]===G.names[t])&&!/^Команда \d$/.test(G.names[t]);
+        G.emb[t]=PICK[i][0];if(!keep){G.names[t]=PICK[i][1];$('n'+t).value=PICK[i][1];}save();show();sPop();};
     });
     $('go').onclick=()=>go(1);
     $('reset').onclick=askRestart;
