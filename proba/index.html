@@ -301,6 +301,7 @@ button{font-family:inherit;}
 .legend{font-weight:700;font-size:22px;color:var(--g-tx);margin-top:14px;text-align:center;}
 .ya{font-family:'Amiri','Noto Naskh Arabic','Times New Roman',serif;}
 .chip .ar{font-size:1.25em;line-height:1;}
+.prep{display:inline-block;font-weight:800;font-size:24px;color:var(--teal-deep);background:var(--teal-tint);border:2px solid var(--teal);border-radius:999px;padding:6px 22px;margin-top:6px;}
 .fmap.seven{grid-template-columns:repeat(7,1fr);}
 </style>
 </head>
@@ -557,7 +558,7 @@ function optsHTML(s,x){
 function render(anim=true){
   const s=S[G.cur], el=$('stage'); let h='';
   if(s.type==='title'){
-    h='<div class="salam-ar">السَّلَامُ عَلَيْكُمْ</div><div class="gtitle">Пробный экзамен</div>'+
+    h='<div class="salam-ar">السَّلَامُ عَلَيْكُمْ</div><div class="prep">Тренажёр · подготовка к экзамену</div><div class="gtitle">Пробный экзамен</div>'+
       '<div class="gsub">Нун · мим · мадд · шадда · танвин · хамзатуль-васль · слово '+AR('ٱللَّه')+'</div><div class="flourish"><span class="dia"></span></div>'+
       '<div class="setup">'+[0,1].map(t=>'<div class="tcard '+(t?'b':'a')+'"><div class="tl">Команда '+(t+1)+'</div>'+
         embHTML(t,'e'+t)+'<div class="tip">нажмите на эмблему — сменить · название можно написать своё</div>'+
